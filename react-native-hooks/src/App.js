@@ -6,6 +6,8 @@ import { useState } from "react";
 import Button from "./components/Button";
 import Length from "./components/Length";
 import AverageCalculator from "./components/Average";
+import Signup from "./components/Signup";
+import ChangeTheme from "./components/ChangeTheme";
 const Container = styled.View`
     flex:1;
     background-color:#fff;
@@ -25,7 +27,9 @@ const App = () => {
             onPress={() => setBtn(prev => !prev)}
         /> */}
         {/* <Length/> */}
-        <AverageCalculator/>
+        {/* <AverageCalculator/> */}
+        {/* <Signup/> */}
+        <ChangeTheme/>
     </Container>
     )
 }
