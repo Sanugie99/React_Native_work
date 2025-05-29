@@ -16,6 +16,7 @@ const HomeScreen = () => {
         backgroundColor: "#fff",
       }}
     >
+      {/* JS에서 false로 판단하는 것들 : false, '', null, undefined, 0, NaN */}
       {user ? (
         <>
           <Text style={{ fontSize: 24, marginBottom: 20 }}>

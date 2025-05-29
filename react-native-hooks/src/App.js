@@ -8,6 +8,11 @@ import Length from "./components/Length";
 import AverageCalculator from "./components/Average";
 import Signup from "./components/Signup";
 import ChangeTheme from "./components/ChangeTheme";
+import Counter2 from "./components/Counter2";
+import LoginForm from "./components/LoginForm";
+import { CartProvider } from "./components/CartContext";
+import CartScreen from "./components/CartScreen";
+
 const Container = styled.View`
     flex:1;
     background-color:#fff;
@@ -17,20 +22,25 @@ const Container = styled.View`
 
 const App = () => {
     // const [btn, setBtn] = useState(true);
-    return(
-    <Container>
-        {/* <Counter/> */}
-        {/* <Parent/> */}
-        {/* {btn && <Form />}
-        <Button 
-            title={btn ? "Hide" : "show"}
-            onPress={() => setBtn(prev => !prev)}
-        /> */}
-        {/* <Length/> */}
-        {/* <AverageCalculator/> */}
-        {/* <Signup/> */}
-        <ChangeTheme/>
-    </Container>
+    return (
+    //     <Container>
+    //         {/* <Counter/> */}
+    //         {/* <Parent/> */}
+    //         {/* {btn && <Form />}
+    //     <Button 
+    //         title={btn ? "Hide" : "show"}
+    //         onPress={() => setBtn(prev => !prev)}
+    //     /> */}
+    //         {/* <Length/> */}
+    //         {/* <AverageCalculator/> */}
+    //         {/* <Signup/> */}
+    //         {/* <ChangeTheme/> */}
+    //         {/* <Counter2/> */}
+    //         <LoginForm />
+    //     </Container>
+    <CartProvider>
+        <CartScreen/>
+    </CartProvider>
     )
 }
 
