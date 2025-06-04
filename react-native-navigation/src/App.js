@@ -3,7 +3,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import StackNavigation from "./navigation/Stack";
 import TabNavigation from "./navigation/Tab";
 
-
 const Container = styled.View`
     flex: 1;
     backgound-color: #fff;

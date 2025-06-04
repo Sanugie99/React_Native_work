@@ -24,7 +24,7 @@ const List = ({navigation,route}) => {
             <StyledText>List</StyledText>
             {items.map(item => (
                 <Button
-                    key={item._id}
+                    key={item.id}
                     title={item.name}
                     // Item화면으로 이동하면서 화면의 id와 name을 함께 전달
                     onPress={() => navigation.navigate('Item',{id:item._id, name:item.name})}

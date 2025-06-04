@@ -1,15 +1,15 @@
 import styled from "styled-components";
 
 const Container = styled.View`
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-    background-color: #54b7f9;
+    flex : 1;
+    justify-content : center;
+    align-items : center;
+    background-color : #54b7f9;
 `
 
 const StyledText = styled.Text`
-    font-size: 30px;
-    color: #fff;
+    font-size : 30px;
+    color : #fff;
 `
 
 export const Mail = () => {
