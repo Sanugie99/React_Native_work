@@ -8,16 +8,33 @@ const colors = {
 };
 
 export const theme = {
+    //배경색
     background: colors.white,
+
+    //글자색
     text: colors.black,
+
+    //이미지 관련
     ImageBackground: colors.grey_0,
+    imageButtonBackground: colors.grey_0,
+    imageButtonIcon: colors.white,
+
+    //Input 관련
     label: colors.grey_1,
     inputPlaceholder: colors.grey_1,
     inputBorder: colors.grey_1,
     errorText: colors.red,
+
+    //Button관련
     buttonBackground: colors.blue,
     buttonTitle: colors.white,
     buttonUnFilledTitle: colors.blue,
-    headerTintColor: colors.black
+    headerTintColor: colors.black,
+
+    //Spinner 관련
+    spinnerBackground: colors.black,
+    spinnerIndicator: colors.white,
+
+
 }
 

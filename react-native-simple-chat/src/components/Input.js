@@ -73,20 +73,5 @@ const Input = forwardRef(
         );
     })
 
-Input.defaultProps = {
-    onBlur: () => { },
-};
-
-Input.propTypes = {
-    label: PropTypes.string.isRequired,
-    value: PropTypes.string.isRequired,
-    onChangeText: PropTypes.func,
-    onSubmitEditing: PropTypes.func,
-    onBlur: PropTypes.func,
-    placeholder: PropTypes.string,
-    isPassword: PropTypes.bool,
-    returnKeyType: PropTypes.oneOf(['done', 'next']),
-    maxLength: PropTypes.number,
-};
 
 export default Input;

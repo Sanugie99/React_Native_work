@@ -4,6 +4,9 @@ import { useState, useRef, useEffect } from 'react';
 import { images } from '../utils/images';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { validateEmail, removeWhitespce } from '../utils/common';
+import { login } from '../utils/firebase';
+import { Alert } from 'react-native';
+
 
 const Container = styled.View`
   flex: 1;
@@ -38,7 +41,7 @@ const Login = ({ navigation }) => {
     useEffect(() => {
         //로그인 버튼은 이메일과 비밀번호가 입력되어있어야 하고 에러메시지가 없어야 활성화 된다.
         setIsDisabled(!(email && password && !errorMessage));
-    },[email, password, errorMessage]);
+    }, [email, password, errorMessage]);
 
     const _handleEmailChange = (email) => {
         //입력된 이메일에 공백이 있다면 먼저 지운다
@@ -53,13 +56,20 @@ const Login = ({ navigation }) => {
         setPassword(removeWhitespce(password));
     }
 
-    const _handleLoginButtonPress = () => {
-
+    //이메일과 비밀번호를 가지고 로그인 버튼을 눌렀을 때
+    //로그인된 이메일이 나오는 alert창 띄우기
+    const _handleLoginButtonPress = async () => {
+        try {
+            const user = await login({ email, password });
+            Alert.alert('Login Success', user.email);
+        } catch (error) {
+            Alert.alert('Login Error', error.message);
+        }
     }
 
     return (
         <KeyboardAwareScrollView
-            contentContainerStyle={{ flex: 1 }}
+            contentContainerStyle={{ flexGrow: 1 }}
             extraScrollHeight={80}
             enableOnAndroid={true}
         >
@@ -84,9 +94,9 @@ const Login = ({ navigation }) => {
                     isPassword
                 />
                 <ErrorText>{errorMessage}</ErrorText>
-                <Button 
-                    title='Login' 
-                    onPress={_handleLoginButtonPress} 
+                <Button
+                    title='Login'
+                    onPress={_handleLoginButtonPress}
                     disabled={disabled}
                 />
                 <Button

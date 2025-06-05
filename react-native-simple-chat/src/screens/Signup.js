@@ -5,6 +5,8 @@ import { validateEmail, removeWhitespce } from '../utils/common';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
 import { useRef, useState, useEffect } from 'react';
 import { images } from '../utils/images';
+import { signup } from '../utils/firebase';
+import { Alert } from 'react-native';
 
 const Container = styled.View`
   flex: 1;
@@ -63,16 +65,30 @@ const Signup = () => {
     )
   }, [name, email, password, passwordConfirm, errorMessage]);
 
-  const _handleSignupButtonPress = () => { };
+  const _handleSignupButtonPress = async () => {
+    try {
+      const user = await signup({ email, password, name, photoURL });
+      console.log(user);
+      Alert.alert('Signup Success', user.email);
+    } catch (error) {
+      Alert.alert('Signup Error', error.message);
+    }
+  };
 
   return (
     <KeyboardAwareScrollView
-      contentContainerStyle={{ flex: 1 }}
+      contentContainerStyle={{ flexGrow: 1 }}
       extraScrollHeight={80}
       enableOnAndroid={true}
     >
       <Container>
-        <Image rounded url={photoURL} />
+        {/* 프로필 사진 */}
+        <Image
+          rounded
+          url={photoURL}
+          showButton
+          onChangeImage={url => setPhotoURL(url)}
+        />
 
         {/* 이름 입력 */}
         <Input
@@ -105,9 +121,9 @@ const Signup = () => {
           label="Password"
           value={password}
           onChangeText={text => setPassword(removeWhitespce(text))}
-          onSubmitEditing={() => passwordConfirm.current.focus()}
+          onSubmitEditing={() => passwordConfirmRef.current.focus()}
           placeholder="Password"
-          returnKeyType="done"
+          returnKeyType="next"
           isPassword
         />
 
