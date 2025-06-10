@@ -3,10 +3,11 @@ import { Image, Input, Button } from '../components';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { validateEmail, removeWhitespce } from '../utils/common';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useContext } from 'react';
 import { images } from '../utils/images';
 import { signup } from '../utils/firebase';
 import { Alert } from 'react-native';
+import { ProgressContext, UserContext } from '../contexts';
 
 const Container = styled.View`
   flex: 1;
@@ -26,6 +27,9 @@ const ErrorText = styled.Text`
 `
 
 const Signup = () => {
+
+  const { spinner } = useContext(ProgressContext);
+  const { dispatch } = useContext(UserContext);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -67,11 +71,15 @@ const Signup = () => {
 
   const _handleSignupButtonPress = async () => {
     try {
+      spinner.start();
       const user = await signup({ email, password, name, photoURL });
+      dispatch(user);
       console.log(user);
       Alert.alert('Signup Success', user.email);
     } catch (error) {
       Alert.alert('Signup Error', error.message);
+    } finally {
+      spinner.stop();
     }
   };
 

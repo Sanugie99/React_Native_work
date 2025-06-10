@@ -2,6 +2,7 @@ import { StatusBar, Image } from "react-native";
 import { useState, useEffect } from "react";
 import { ThemeProvider } from "styled-components";
 import { theme } from "./theme";
+import { ProgressProvider, UserProvider } from "./contexts";
 
 // expo-asset : 로컬 이미지 / 파일을 앱에 미리 로드할 때 사용하는 패키지
 import { Asset } from 'expo-asset';
@@ -51,8 +52,8 @@ const App = () => {
                 // setIsReady(true); // 로딩이 완료되면 isReady를 true로 설정
                 // await SplashScreen.hideAsync(); // 스플래시 화면 숨김
                 setTimeout(async () => {
-                setIsReady(true);
-                await SplashScreen.hideAsync();
+                    setIsReady(true);
+                    await SplashScreen.hideAsync();
                 }, 3000);
             }
         };
@@ -72,16 +73,21 @@ const App = () => {
     if (!isReady) {
         return (
             <Image
-            source={require('../assets/splash.png')}
-            style={{ flex: 1, resizeMode: 'contain', width: '100%', height: '100%' }}
+                source={require('../assets/splash.png')}
+                style={{ flex: 1, resizeMode: 'contain', width: '100%', height: '100%' }}
             />
         );
     }
 
     return (
+        // 로딩 완료 시 앱의 실제 UI를 렌더링
         <ThemeProvider theme={theme}>
-            <StatusBar barStyle="dark-content" />
-            <Navigation />
+            <UserProvider>
+                <ProgressProvider>
+                    <StatusBar barStyle="dark-content" />
+                    <Navigation />
+                </ProgressProvider>
+            </UserProvider>
         </ThemeProvider>
     )
 }

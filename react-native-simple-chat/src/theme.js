@@ -24,16 +24,22 @@ export const theme = {
     inputPlaceholder: colors.grey_1,
     inputBorder: colors.grey_1,
     errorText: colors.red,
+    inputDisabledBackground: colors.grey_0,
 
     //Button관련
     buttonBackground: colors.blue,
     buttonTitle: colors.white,
     buttonUnFilledTitle: colors.blue,
     headerTintColor: colors.black,
+    buttonLogout: colors.red,
 
     //Spinner 관련
     spinnerBackground: colors.black,
     spinnerIndicator: colors.white,
+
+    //Tab style
+    tabActiveColor: colors.blue,
+    tabInactiveColor: colors.grey_1,
 
 
 }

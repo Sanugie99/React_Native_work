@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 import { Image, Input, Button } from '../components';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useContext } from 'react';
 import { images } from '../utils/images';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { validateEmail, removeWhitespce } from '../utils/common';
 import { login } from '../utils/firebase';
 import { Alert } from 'react-native';
+import { ProgressContext, UserContext } from '../contexts';
 
 
 const Container = styled.View`
@@ -26,6 +27,10 @@ const ErrorText = styled.Text`
 `;
 
 const Login = ({ navigation }) => {
+
+    const { spinner } = useContext(ProgressContext);
+    const { dispatch } = useContext(UserContext);
+
     //이메일 상태 관리
     const [email, setEmail] = useState('');
     //비밀번호 상태 관리
@@ -60,12 +65,17 @@ const Login = ({ navigation }) => {
     //로그인된 이메일이 나오는 alert창 띄우기
     const _handleLoginButtonPress = async () => {
         try {
+            spinner.start();
             const user = await login({ email, password });
+            //UserContext의 dispatch함수를 통해 user의 상태가 인증된 사용자 정보로 변경된다.
+            dispatch(user);
             Alert.alert('Login Success', user.email);
         } catch (error) {
             Alert.alert('Login Error', error.message);
+        } finally {
+            spinner.stop();
         }
-    }
+    };
 
     return (
         <KeyboardAwareScrollView

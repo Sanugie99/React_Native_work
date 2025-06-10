@@ -2,6 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import config from '../../firebase.json'
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
 
 //getStorage : firebase와 연결된 Storage객체를 불러온다
 //ref : Storage에 있는 파일이나 경로를 참조하는 객체
@@ -9,12 +10,21 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 //getDownloadURL : Storage에 업로드된 파일의 다운로드 URL을 가져온다.
 //updateProfile : 로그인한 유저의 프로필 업데이트를 하는 함수.
 
-const app = initializeApp(config);
 
+// Firebase 앱 초기화 (firebase.json 파일에 담긴 config 사용)
+const app = initializeApp(config);
 //getAuth
 //현재 프로젝트에 대한 인증 서비스 객체를 만든다.
 //이 객체를 통해 인증과 관련된 모든 작업(로그인, 회원가입, 로그아웃 등)을 하게된다.
+//인증 모듈 가져오기
 const auth = getAuth(app);
+
+// 스토리지 모듈 가져오기
+const storage = getStorage(app);
+
+//파이어스토어 DB 모듈 가져오기
+export const db = getFirestore(app);
+
 
 export const login = async ({ email, password }) => {
   //signInWithEmailAndPassword()
@@ -69,5 +79,70 @@ const uploadImage = async uri => {
     contentType: 'image/png',
   })
 
+
   return await getDownloadURL(storageRef);
+}
+
+export const logout = async () => {
+  return await auth.signOut();
+};
+
+export const getCurrentUser = () => {
+  //auth.currentUser에 로그인된 사용자 정보가 담겨있다.
+  //profil 페이지도 인증이 필요한 화면이기 때문에 email, uid가 필요하다
+  //email, uid, name, photoUrl을 구조분해할당으로 받아서 객체 리터럴에 담아서 반환
+  const { uid, email, displayName, photoURL } = auth.currentUser;
+
+  return {
+    uid,
+    email,
+    name: displayName,
+    photoUrl: photoURL,
+  }
+}
+
+
+//사용자의 프로필 사진 업데이트
+export const updateUserPhoto = async photoUrl => {
+  //1.현재 로그인한 사용자를 불러온다.
+  const user = auth.currentUser;
+  //2.인자로 받은 phtoUrl이 https로 시작하면 url을 그대로 사용
+  //그렇지 않으면 Storage에 업로드 후 firebase Storage URL을 획득한다
+  const storageUrl = photoUrl.startsWith('https') ? photoUrl : await uploadImage(photoUrl);
+  //firebase Auth의 updateProfile로 프로필 사진 주소를 수정
+  await updateProfile(user, { photoURL: storageUrl });
+  //업데이트 된 사용자 정보를 객체형태로 반환한다.
+  //{name: xxx, email:xxx, photoUrl: xxx}
+  return{
+    name: user.displayName,
+    email: user.email,
+    photoUrl: user.photoURL,
+  }
+}
+
+
+//문서 생성하기
+export const createChannel = async({title, description}) => {
+  //1. 'channels'컬렉션 참조 가져오기
+  const channelCollection = collection(db,'channels');
+
+  //2. 새 문서에 대한 참조 생성
+  const newChannelRef = doc(channelCollection);
+
+  //3. 채널에 할당될 고유ID
+  const id = newChannelRef.id;
+
+  //4. 새 채널에 들어갈 필드값을 구성
+  const newChannel = {
+    id,
+    title,
+    description,
+    createAt: Date.now(),
+  }
+
+  //5. setDoc로 해당 문서 경로에 데이터 쓰기
+  await setDoc(newChannelRef, newChannel);
+
+  //6. 생성된 문서 ID반환
+  return id;
 }
