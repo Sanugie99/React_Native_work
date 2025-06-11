@@ -1,12 +1,13 @@
 import { useState } from "react";
-import styled from "react-native-styled-components";
-import { Input, Button } from "../components/CustomInput";
+import styled from "styled-components";
+import Input from "../components/CustomInput";
+import Button from "../components/CustomButton";
 
 const Container = styled.View`
     flex: 1;
     justify-content: center;
     align-items: center;
-    background-color: #ccc;
+    background-color: #fff;
     padding : 20px;
 `
 

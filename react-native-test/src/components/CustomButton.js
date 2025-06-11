@@ -1,4 +1,4 @@
-import styled from "react-native-styled-components";
+import styled from "styled-components";
 
 const StyledButton = styled.TouchableOpacity`
     width: 80%;

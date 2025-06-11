@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Profile, ChannelList } from "../screens";
 import { MaterialIcons } from "@expo/vector-icons"
 import { ThemeContext } from "styled-components";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 const Tab = createBottomTabNavigator();
 
@@ -17,7 +17,7 @@ const TabBarIcon = ({ focused, name }) => {
     )
 }
 
-const MainTab = ({ navigation, }) => {
+const MainTab = ({ navigation, route }) => {
 
     const theme = useContext(ThemeContext);
     //모든 탭에 대해 선택되면 tabActiveColor로, 선택이 안되면 tabInactiveColor로 설정
@@ -27,18 +27,25 @@ const MainTab = ({ navigation, }) => {
     //첫번째 스크린에 들어갈 아이콘은 name은 chat-bubble, chat-bubble-outline
     //두번째 스크린에 들어갈 아이콘은 name은 person, person-outline
 
+    useEffect(() => {
+        const titles = route.state?.routeNames || ['Channels'];
+        const index = route.state?.index || 0;
+        navigation.setOptions({
+            headerTitle: titles[index],
+        });
+    }, [route])
+
     return (
         //Channel List, Profile 컴포넌트를 Screen으로 갖도록 설정
         <Tab.Navigator
             screenOptions={{
-                headerShown: false,
                 tabBarActiveTintColor: theme.tabActiveColor,
                 tabBarInactiveTintColor: theme.tabInactiveColor,
                 headerTitleAlign: 'center',
             }}
         >
             <Tab.Screen
-                name="Channel List"
+                name="Channels"
                 component={ChannelList}
                 options={{
                     tabBarIcon: ({ focused }) => (

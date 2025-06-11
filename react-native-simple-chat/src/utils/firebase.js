@@ -2,7 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import config from '../../firebase.json'
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
+import { getFirestore, collection, doc, setDoc, addDoc, serverTimestamp } from 'firebase/firestore';
 
 //getStorage : firebase와 연결된 Storage객체를 불러온다
 //ref : Storage에 있는 파일이나 경로를 참조하는 객체
@@ -124,6 +124,7 @@ export const updateUserPhoto = async photoUrl => {
 //문서 생성하기
 export const createChannel = async({title, description}) => {
   //1. 'channels'컬렉션 참조 가져오기
+  //firebase에 없는 컬렉션을 참조해서 가져오려고 해도 에러가 나지는 않는다.
   const channelCollection = collection(db,'channels');
 
   //2. 새 문서에 대한 참조 생성
@@ -137,12 +138,29 @@ export const createChannel = async({title, description}) => {
     id,
     title,
     description,
-    createAt: Date.now(),
+    createdAt: Date.now(),
   }
 
   //5. setDoc로 해당 문서 경로에 데이터 쓰기
   await setDoc(newChannelRef, newChannel);
 
+  //맨처음에 컬렉션은 없지만 문서를 저장하면서 자동으로 컬렉션을 만든다.
+
   //6. 생성된 문서 ID반환
   return id;
+}
+
+export const createMessage = async ({ channelId, text }) => {
+  console.log('Sending message to channel:', channelId, text);
+
+  try {
+    const collectionRef = collection(db, `channels/${channelId}/messages`);
+    await addDoc(collectionRef, {
+      text,
+      createdAt: serverTimestamp()
+    })
+    console.log('Message added successfully!');
+  } catch (error) {
+    console.error('Error adding message: ', error);
+  }
 }
