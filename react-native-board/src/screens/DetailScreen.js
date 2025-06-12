@@ -1,34 +1,42 @@
-//게시글 상세보기 페이지
-import styled from "styled-components";
-import posts from "../data/posts";
+import {View, Text, StyleSheet} from 'react-native'
+import posts from '../data/posts'
 
-const Container = styled.View`
-  flex: 1;
-  padding: 16px;
-  background-color: #000;
-`;
-
-const Title = styled.Text`
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 12px;
-`;
-
-const Text = styled.Text`
-  font-size: 16px;
-  color: #fff;
-`;
-
-const Detail = ({ rotue }) => {
-
-    const {id} = rotue.params;
-    const post = posts.find(p => p.id === id );
-    if (!post) return null;
+const DetailScreen = ({ route }) => {
+    const { post } = route.params;
 
     return(
-        <Container>
-            <Title>{post.title}</Title>
-            <Text>{post.Text}</Text>
-        </Container>
+        <View style={Styles.container}>
+            <Text style={Styles.title}>{post.title}</Text>
+            <Text style={Styles.meta}>
+                작성자: {post.author} | {post.time} | 조회수: {post.views}
+            </Text>
+            <Text style={Styles.description}>{post.description}</Text>
+        </View>
     )
 }
+
+const Styles = StyleSheet.create({
+    container: {
+        flex:1,
+        backgroundColor: "#121212",
+        padding: 16,
+    },
+    title: {
+        color: '#fff',
+        fontSize: 22,
+        fontWeight: 'bold',
+        marginBottom: 8,
+    },
+    meta: {
+        color: '#999',
+        marginBottom: 12,
+    },
+    description: {
+        color: '#fff',
+        fontSize: 16,
+        lineHeight: 24,
+    }
+})
+
+export default DetailScreen;
+

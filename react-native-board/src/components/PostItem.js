@@ -1,30 +1,33 @@
-import styled from "styled-components";
+import {View,Text, StyleSheet} from 'react-native'
 
-const Container = styled.View`
-    padding: 16px;
-    border-bottom-width: 1px;
-    border-color: #eee;
-    background-color: #000;
-`
-
-const Title = styled.Text`
-    font-size: 18;
-    font-weight: blod;
-    margin-bottom: 8px;
-`
-
-const Text = styled.Text`
-    font-size: 14px;
-    color: #fff;
-`
-
-const PostItem = ({ post, onPress }) => {
+const PostItem = ({post}) => {
     return(
-        <Container onPress={() => onPress(post.id)}>
-            <Title>{post.title}</Title>
-            <Text>{post.text}</Text>
-        </Container>
+        <View style={styles.container}>
+            <Text style={styles.title}>{post.title}</Text>
+            <Text style={styles.meta}>
+                {post.author} {post.time} 조회 {post.views}
+            </Text>
+        </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container : {
+        padding : 12,
+        borderBottomWidth : 0.5,
+        borderBottomColor : '#333',
+        backgroundColor : '#121212',
+    },
+    title : {
+        color: '#fff',
+        fontWeight : 'bold',
+        fontSize : 15,
+        marginBottom : 4,
+    },
+    meta : {
+        color: '#aaa',
+        fontSize : 12,
+    }
+})
 
 export default PostItem;

@@ -1,41 +1,59 @@
-//게시판 메인 페이지
-import { useState } from "react";
-import styled from "styled-components";
-import PostItem from "../components/PostItem";
-import AddPostButton from "../components/Button";
-import posts from "../data/posts";
+import { View, StyleSheet, FlatList, Button, Pressable } from 'react-native'
+import PostItem from '../components/PostItem'
+import FloatingButton from '../components/FloatingButton'
+import posts from '../data/posts'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import { useIsFocused } from '@react-navigation/native'
 
 
-const Container = styled.View`
-    flex: 1;
-    background-color: black;
-`
-const Board = ({ navigation }) => {
+const BoardScreen = ({ navigation }) => {
+    console.log('navigation : ', navigation);
+    const [boardList, setBoardList] = useState(posts);
+    const isFocused = useIsFocused();
 
-    const [post, setPost] = useState(posts);
+    //fetch나 axios를 통해서 읽어온 데이터들을 state에 담아서
+    //FlatList에 출력
+    const getBoardList = async () => {
+        try {
+            const response = await axios.get('http://10.0.2.2:10000/api/posts');
 
-    //게시글 불러오기
-    const boardItem = ({ item }) => {
-        <PostItem
-            post={item}
-            onPress={id => navigation.navigate('Detail', { id })}
-        />
+            const serverPosts = response?.data?.data || [];
+
+            setBoardList([...posts, ...serverPosts]);
+        } catch (error) {
+            console.log('게시글 불러오기 실패', error);
+        }
     }
 
-    //게시글을 추가
-    const addPost = post => {
-        setPost(prev => [post, ...prev]);
-    }
+    useEffect(() => {
+        getBoardList();
+    }, [isFocused])
 
-    return (
-        <Container>
-            <List
-                data={post}
-                keyExtractor={item => item.id}
-                boardItem={boardItem}
-            />
-            <AddPostButton onPrees={() => navigation.navigate('Write', { addPost })} />
-        </Container>
+    const renderItem = ({ item }) => (
+        <Pressable onPress={() => navigation.navigate('Detail', { post: item })}>
+            <PostItem post={item} />
+        </Pressable>
     )
 
+
+    return (
+        <View style={styles.container}>
+            <FlatList
+                data={boardList}
+                keyExtractor={(item, index) => `${item.id}-${index}`}
+                renderItem={renderItem}
+            />
+            <FloatingButton onPress={() => navigation.navigate('Write')} />
+        </View>
+    )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#121212',
+    }
+})
+
+export default BoardScreen;
