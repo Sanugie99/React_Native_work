@@ -1,3 +1,3 @@
-import App from "./src/App";
+import Signup from "./src/App";
 
-export default App;
+export default Signup;
